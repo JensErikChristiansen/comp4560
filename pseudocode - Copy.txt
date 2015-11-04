@@ -1,0 +1,45 @@
+// set upper left x and y to starting position
+ulx = w / 2
+uly = 2s + g
+// set bottom right x and y to width and height of rectangle
+brx = s
+bry = s
+
+// draw background
+fill background from (ulx, uly) to (w, h)
+
+// Continue adding new rows until the bottom of the rectangle 
+//exceeds the width of the bottom border of the window 
+//(which is of width 2s + g)
+while (uly + s < h - 2s + g) {
+
+	// Continue adding new columns until the right of the rectangle 
+	//exceeds the width of the right border of the window 
+	//(which is of width 2s + g)
+	while (ulx + s < w - 2s + g) {
+		rectangle(ulx, uly, brx, bry)
+		ulx += s + g
+		brx += s + g
+	}
+	uly += s + g
+	bry += s + g
+}
+
+// -----LEFT SIDE----- //
+
+// set upper left x and y to starting position
+ulx = w / 2
+uly = 2s + g
+// set bottom right x and y to width and height of rectangle
+brx = ulx - s
+bry = ulx - s
+
+while (uly + s > h - 2s + g) {
+	while (ulx + s > w - 2s + g) {
+		rectangle(ulx, uly, brx, bry)
+		ulx -= s + g
+		brx -= s + g
+	}
+	uly += s + g
+	bry += s + g
+}
