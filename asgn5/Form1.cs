@@ -51,8 +51,8 @@ namespace asgn5v1
 		private System.Windows.Forms.ToolBarButton exitbtn;
 		int[,] lines;
 
-        private double deltaX = 20;
-        private double deltaY = 20;
+        private double deltaX = 75;
+        private double deltaY = 35;
 
 		public Transformer()
 		{
@@ -310,7 +310,7 @@ namespace asgn5v1
             // 
             // Transformer
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(508, 306);
             this.Controls.Add(this.toolBar1);
             this.Name = "Transformer";
@@ -388,8 +388,9 @@ namespace asgn5v1
 		{
             double xOffset = vertices[0, 0];
             double yOffset = vertices[0, 1];
+            double factor = ClientRectangle.Height / 20 / 2;
             ctrans = translate(xOffset * -1, yOffset * -1);
-            ctrans = applyTransformation(ctrans, scale(20, 20));
+            ctrans = applyTransformation(ctrans, scale(factor, factor, factor));
             ctrans = applyTransformation(ctrans, reflect(Axis.X));
             ctrans = applyTransformation(ctrans, translate(ClientRectangle.Width / 2, ClientRectangle.Height / 2));
 
@@ -563,9 +564,9 @@ namespace asgn5v1
             double[,] result = initArray();
 
             // convert into radians for trig functions
-            deg = (Math.PI / 180) * deg;
+            //deg = (Math.PI / 180) * deg;
 
-            deg = clockwise ? deg * -1 : deg;
+            //deg = clockwise ? deg * -1 : deg;
 
             
             switch (axis)
@@ -635,6 +636,7 @@ namespace asgn5v1
 		{
             double xOffset = scrnpts[0, 0];
             double yOffset = scrnpts[0, 1];
+            double zOffset = scrnpts[0, 2];
 
             if (e.Button == transleftbtn)
 			{
@@ -662,7 +664,7 @@ namespace asgn5v1
                 
                 Console.WriteLine(xOffset + ", " + yOffset);
                 ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
-                ctrans = applyTransformation(ctrans, scale(1.25, 1.25));
+                ctrans = applyTransformation(ctrans, scale(1.1, 1.1));
                 ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
                 Refresh();
 			}
@@ -670,29 +672,29 @@ namespace asgn5v1
 			{
                 Console.WriteLine(xOffset + ", " + yOffset);
                 ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
-                ctrans = applyTransformation(ctrans, scale(.75, .75));
+                ctrans = applyTransformation(ctrans, scale(.9, .9));
                 ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
                 Refresh();
 			}
 			if (e.Button == rotxby1btn) 
 			{
-                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
-                ctrans = applyTransformation(ctrans, rotate(Axis.X, 10, false));
-                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, rotate(Axis.X, .05, false));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
                 Refresh();
             }
 			if (e.Button == rotyby1btn) 
 			{
-                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
-                ctrans = applyTransformation(ctrans, rotate(Axis.Y, 10, false));
-                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, rotate(Axis.Y, .05, false));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
                 Refresh();
             }
 			if (e.Button == rotzby1btn) 
 			{
-                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
-                ctrans = applyTransformation(ctrans, rotate(Axis.Z, 10, false));
-                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, rotate(Axis.Z, .05, false));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
                 Refresh();
             }
 
