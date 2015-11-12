@@ -67,7 +67,7 @@ namespace asgn5v1
 			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle(ControlStyles.UserPaint, true);
 			this.SetStyle(ControlStyles.DoubleBuffer, true);
-			Text = "COMP 4560:  Assignment 5 (200830) (Your Name Here)";
+			Text = "COMP 4560:  Assignment 5 (200830) (Jens Christiansen)";
 			ResizeRedraw = true;
 			BackColor = Color.Black;
 			MenuItem miNewDat = new MenuItem("New &Data...",
@@ -310,7 +310,7 @@ namespace asgn5v1
             // 
             // Transformer
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.ClientSize = new System.Drawing.Size(508, 306);
             this.Controls.Add(this.toolBar1);
             this.Name = "Transformer";
@@ -353,19 +353,6 @@ namespace asgn5v1
                         scrnpts[i, j] = temp;
                     }
                 }
-
-                // find center of shape
-                //double xOffset = vertices[0, 0];
-                //double yOffset = vertices[0, 1];
-                //double[,] tempTrans = new double[4, 4];
-                //tempTrans = translate(xOffset * -1, yOffset * -1);
-                //tempTrans = multTransformMatrices(tempTrans, scale(20, 20));
-                //tempTrans = multTransformMatrices(tempTrans, reflect(ReflectionAxis.X));
-                //tempTrans = multTransformMatrices(tempTrans, translate(ClientRectangle.Width / 2, ClientRectangle.Height / 2));
-
-                //scrnpts = multMatrices(scrnpts, tempTrans);
-                
-
 
                 //now draw the lines
 
@@ -581,11 +568,30 @@ namespace asgn5v1
             deg = clockwise ? deg * -1 : deg;
 
             
-
-            result[0, 0] = Math.Cos(deg);
-            result[0, 1] = Math.Sin(deg);
-            result[1, 0] = Math.Sin(deg) * -1;
-            result[1, 1] = Math.Cos(deg);
+            switch (axis)
+            {
+                case Axis.X:
+                    result[1, 1] = Math.Cos(deg);
+                    result[1, 2] = Math.Sin(deg);
+                    result[2, 1] = Math.Sin(deg) * -1;
+                    result[2, 2] = Math.Cos(deg);
+                    break;
+                case Axis.Y:
+                    result[0, 0] = Math.Cos(deg);
+                    result[0, 2] = Math.Sin(deg) * -1;
+                    result[2, 0] = Math.Sin(deg);
+                    result[2, 2] = Math.Cos(deg);
+                    break;
+                case Axis.Z:
+                    result[0, 0] = Math.Cos(deg);
+                    result[0, 1] = Math.Sin(deg);
+                    result[1, 0] = Math.Sin(deg) * -1;
+                    result[1, 1] = Math.Cos(deg);
+                    break;
+                default:
+                    break;
+            }
+            
 
             return result;
         }
@@ -670,8 +676,11 @@ namespace asgn5v1
 			}
 			if (e.Button == rotxby1btn) 
 			{
-				
-			}
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
+                ctrans = applyTransformation(ctrans, rotate(Axis.X, 10, false));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset));
+                Refresh();
+            }
 			if (e.Button == rotyby1btn) 
 			{
                 ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1));
