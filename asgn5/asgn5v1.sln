@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asgn5v1", "asgn5v1.csproj", "{BECB4AF2-F806-497F-B3BB-992E03E5B717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "..\ConsoleApplication1\ConsoleApplication1.csproj", "{3F186EC3-E31A-476B-81DC-86EE76FB5653}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BECB4AF2-F806-497F-B3BB-992E03E5B717}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BECB4AF2-F806-497F-B3BB-992E03E5B717}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BECB4AF2-F806-497F-B3BB-992E03E5B717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F186EC3-E31A-476B-81DC-86EE76FB5653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F186EC3-E31A-476B-81DC-86EE76FB5653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F186EC3-E31A-476B-81DC-86EE76FB5653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F186EC3-E31A-476B-81DC-86EE76FB5653}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

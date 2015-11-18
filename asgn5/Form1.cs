@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Text;
+using System.Timers;
 
 namespace asgn5v1
 {
@@ -14,19 +15,29 @@ namespace asgn5v1
 	/// </summary>
 	public class Transformer : System.Windows.Forms.Form
 	{
+
+        #region my stuff
         private enum Axis { X, Y, Z }
-		private System.ComponentModel.IContainer components;
-		//private bool GetNewData();
+        private System.Timers.Timer timer;
+        private MethodInvoker invoker;
+        private double deltaX = 75;
+        private double deltaY = 35;
+        #endregion
 
-		// basic data for Transformer
+        private System.ComponentModel.IContainer components;
+        //private bool GetNewData();
 
-		int numpts = 0;
+        // basic data for Transformer
+
+        int numpts = 0;
 		int numlines = 0;
 		bool gooddata = false;		
 		double[,] vertices;
 		double[,] scrnpts;
 		double[,] ctrans = new double[4,4];  //your main transformation matrix
-		private System.Windows.Forms.ImageList tbimages;
+
+        #region controls
+        private System.Windows.Forms.ImageList tbimages;
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.ToolBarButton transleftbtn;
 		private System.Windows.Forms.ToolBarButton transrightbtn;
@@ -50,11 +61,9 @@ namespace asgn5v1
 		private System.Windows.Forms.ToolBarButton resetbtn;
 		private System.Windows.Forms.ToolBarButton exitbtn;
 		int[,] lines;
+        #endregion
 
-        private double deltaX = 75;
-        private double deltaY = 35;
-
-		public Transformer()
+        public Transformer()
 		{
 			//
 			// Required for Windows Form Designer support
@@ -80,7 +89,8 @@ namespace asgn5v1
 			MenuItem miAbout = new MenuItem("&About",
 				new EventHandler(MenuAboutOnClick));
 			Menu = new MainMenu(new MenuItem[] {miFile, miAbout});
-
+            timer = new System.Timers.Timer(10);
+            invoker = new MethodInvoker(Refresh);
         }
 
 		/// <summary>
@@ -94,6 +104,11 @@ namespace asgn5v1
 				{
 					components.Dispose();
 				}
+                if (timer != null)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                }
 			}
 			base.Dispose( disposing );
 		}
@@ -310,7 +325,7 @@ namespace asgn5v1
             // 
             // Transformer
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.ClientSize = new System.Drawing.Size(508, 306);
             this.Controls.Add(this.toolBar1);
             this.Name = "Transformer";
@@ -496,7 +511,6 @@ namespace asgn5v1
 				A[i,i] = 1.0d;
 			}
 		}// end of setIdentity
-      
 
 		private void Transformer_Load(object sender, System.EventArgs e)
 		{
@@ -597,6 +611,17 @@ namespace asgn5v1
             return result;
         }
 
+        private double[,] shearLeft(int factor)
+        {
+            double[,] result = initArray();
+
+            result[0, 0] += factor * result[0, 1];
+            //result[1, 1] = yFactor;
+            //result[2, 2] = zFactor;
+
+            return result;
+        }
+
         private double[,] applyTransformation(double[,] m1, double[,] m2)
         {
             double[,] result = new double[4, 4];
@@ -637,6 +662,7 @@ namespace asgn5v1
             double xOffset = scrnpts[0, 0];
             double yOffset = scrnpts[0, 1];
             double zOffset = scrnpts[0, 2];
+            timer.Dispose();
 
             if (e.Button == transleftbtn)
 			{
@@ -700,21 +726,24 @@ namespace asgn5v1
 
 			if (e.Button == rotxbtn) 
 			{
-				
-			}
+                AnimateRotation(Axis.X, xOffset, yOffset, zOffset);
+            }
 			if (e.Button == rotybtn) 
 			{
-				
-			}
+                AnimateRotation(Axis.Y, xOffset, yOffset, zOffset);
+            }
 			
 			if (e.Button == rotzbtn) 
 			{
-				
-			}
+                AnimateRotation(Axis.Z, xOffset, yOffset, zOffset);
+            }
 
 			if(e.Button == shearleftbtn)
 			{
-				Refresh();
+                //ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, shearLeft(5));
+                //ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
+                Refresh();
 			}
 
 			if (e.Button == shearrightbtn) 
@@ -732,10 +761,22 @@ namespace asgn5v1
 				Close();
 			}
 
-		}
+		} // end toolBar1_ButtonClick
 
-		
-	}
+        private void AnimateRotation(Axis axis, double xOffset, double yOffset, double zOffset)
+        {
+            timer = new System.Timers.Timer(10);
+            timer.Elapsed += (a, b) => {
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, rotate(axis, .02, false));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
+                this.BeginInvoke(invoker);
+            };
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+
+    } // end Transformer class
 
 	
 }
