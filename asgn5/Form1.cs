@@ -104,11 +104,6 @@ namespace asgn5v1
 				{
 					components.Dispose();
 				}
-                if (timer != null)
-                {
-                    timer.Stop();
-                    timer.Dispose();
-                }
 			}
 			base.Dispose( disposing );
 		}
@@ -611,14 +606,10 @@ namespace asgn5v1
             return result;
         }
 
-        private double[,] shearLeft(int factor)
+        private double[,] shearLeft(double factor)
         {
             double[,] result = initArray();
-
-            result[0, 0] += factor * result[0, 1];
-            //result[1, 1] = yFactor;
-            //result[2, 2] = zFactor;
-
+            result[1, 0] = factor;
             return result;
         }
 
@@ -740,15 +731,20 @@ namespace asgn5v1
 
 			if(e.Button == shearleftbtn)
 			{
-                //ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
-                ctrans = applyTransformation(ctrans, shearLeft(5));
-                //ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
+                yOffset = ctrans[3, 1];
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, shearLeft(.1));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
                 Refresh();
 			}
 
 			if (e.Button == shearrightbtn) 
 			{
-				Refresh();
+                yOffset = ctrans[3, 1];
+                ctrans = applyTransformation(ctrans, translate(xOffset * -1, yOffset * -1, zOffset * -1));
+                ctrans = applyTransformation(ctrans, shearLeft(-.1));
+                ctrans = applyTransformation(ctrans, translate(xOffset, yOffset, zOffset));
+                Refresh();
 			}
 
 			if (e.Button == resetbtn)
